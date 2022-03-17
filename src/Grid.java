@@ -18,181 +18,60 @@ public class Grid extends GridPane {
 		for (int row = 0; row < numRows; row++) {
 			for (int col = 0; col < numCols; col++) {
 				Tile tile = new Tile();
-				tile.state = -1;
 				tile.type = 0;
 				tile.row = row;
 				tile.col = col;
-				// CLICK HANDLER
+
+				// Set new properties for the tiles, according to the clicked tile.
 				tile.setOnMouseClicked(e -> {
 					MouseButton mouseButton = e.getButton();
-					if (clicks[0] == 0) {
-						setTiles(numRows, numCols, mines, tile);
+
+					// Handle secondary mouse button click, which sets flags on and off
+					// The number of mines flagged has to be less than the total number of mines
+					// The tile state has to be "covered"
+					if (mouseButton == MouseButton.SECONDARY) {
+						if (mines > 0 && !tile.state.equals("cleared")) tile.flag();
+					} else if (clicks[0] == 0 && !tile.state.equals("flagged")) {
+						// If it's the first click on the grid, position the mines to set the grid layout.
+						// First click is always on an empty tile
+						tiles = TileSet.setTiles(numRows, numCols, mines, tile, tiles, grid);
 						clearEmpty(tile.row, tile.col);
 						clicks[0]++;
-						//						System.out.println(clicks[0]);
-					} else {			
-						int state = (tile.state == 10 ? 11 : tile.state < 0 ? tile.type : 11);
-						if (mouseButton == MouseButton.SECONDARY) {
-							state = (tile.state == 10 ? 12 : mines > 0 && tile.state < 0 ? 10 : 11);
-						}
-						switch(state) {
-
-						default: // primary click, no flag, no mine
-							if (tile.type == 0 && tile.state == -1) {
-								clearEmpty(tile.row, tile.col);
-							} else {
-								tile.setGraphic(null);
-								tile.setText(Integer.toString(tile.type));
-								tile.setStyle("-fx-font-size: " + tileSize/2 + "px; -fx-text-fill: hsb(" + (int)120/(1.5*tile.type) + ", 100%, 100%); ");
-							}
-							tile.state = tile.type;
-							Play.setCleared(Play.getCleared() - 1);
-							if (Play.getCleared() < 1) {
-								Play.gameWin(grid);
-							}
-							break;
-
-						case 9: // primary click, mine
-							tile.setGraphic(tile.imageMine);
-							tile.setStyle("-fx-background-color: 'RED'; ");
-							Play.gameOver(tiles, tile, grid);
-							break;
-
-						case 10: // secondary click, set flag
-							tile.setGraphic(tile.imageFlag);
-							if (tile.type == 9) tiles[tile.row][tile.col] = 10;
-							tile.state = 10;
-							Play.setMines(Play.getMines() - 1);
-							Play.getBase().setTop(ScoreBar.scoreBar());
-							break;
-
-						case 11: // any click, if is safe or has flag, do nothing
-							break;
-
-						case 12: // secondary click, remove flag
-							tile.setGraphic(tile.imageTile);
-							if (tile.type == 10) tile.type = 9;
-							tile.state = -1;
-							Play.setMines(Play.getMines() + 1);
-							Play.getBase().setTop(ScoreBar.scoreBar());
-							break;
-						}
+					} else {
+						// Handle primary click on a tile, checks for state, flags and mines
+						tile.click();
 					}
 				});
+				// Add tiles to grid pane
 				grid.add(tile, col, row);
 			}
 		}
 		return grid;
 	}
 
-	public static int[][] setTiles(int numRows, int numCols, int mines, Tile tile) {
-
-		tiles = new int[numRows][numCols];
-		int num = numCols * numRows;
-		tiles[tile.row][tile.col] = 0;
-		System.out.println("Clicked tile is: " + tile.row + "," + tile.col);
-
-		// MINES POSITIONING
-		// Create an array of random positions for mines, no repetitions allowed
-		int[] positions = new int[num];
-		for (int i = 0; i < num; i++) positions[i] = i;
-
-		for (int i = 0; i < mines; i++) {
-			boolean isValid = false;
-			int index = positions.length - 1 - i;
-			int position = (int)(Math.random() * index);
-			int mine = positions[position];
-			int row = (int)Math.floor((1.0*mine)/numCols);
-			int col = mine%numCols;
-			System.out.print("Trying mine at: " + row + "," + col);
-
-			//						System.out.print("Mine " + mine + " taken from position " + position + " in range 0 to " + index);
-			//						System.out.println(" placed at (" + row + "," + col + ")");
-
-			// Avoid placing mines close range of first tile clicked
-			if (Math.abs(row - tile.row) > 1 || Math.abs(col - tile.col) > 1) {
-				tiles[row][col] = 9;
-				isValid = true;
-			}
-			System.out.println(isValid);
-			if (!isValid) {
-				i--;
-				continue;
-			}
-
-			// Surrounding tiles numbering
-			if (row < numRows - 1) {
-				if (col > 0 && tiles[row+1][col-1] != 9) tiles[row+1][col-1]+= 1;
-				if (tiles[row+1][col] !=9) tiles[row+1][col] += 1;
-				if (col < numCols - 1 && tiles[row+1][col+1] != 9) tiles[row+1][col+1] += 1;
-			}
-
-			if (col < numCols - 1 && tiles[row][col+1] != 9) tiles[row][col+1] += 1;
-			if (col > 0 && tiles[row][col-1] != 9) tiles[row][col-1] += 1;
-			if (row > 0) {
-				if (col > 0 && tiles[row-1][col-1] != 9) tiles[row-1][col-1] += 1;
-				if (tiles[row-1][col] != 9) tiles[row-1][col] += 1;
-				if (col < numCols - 1 && tiles[row-1][col+1] != 9) tiles[row-1][col+1] += 1;
-			}
-
-			positions[position] = positions[index];
-
-			// Check for random positioning, no repetitions allowed
-			//
-			//			System.out.println("Mine " + positions[index] + " moved from position " + index + " to position " + position);
-			//
-			//			int count = 0;
-			//			for (int[] row1: tiles) {
-			//				for (int col1: row1) {
-			//					System.out.print(col1);
-			//					count += (col1 == 9 ? 1 : 0);
-			//				}
-			//				System.out.println();
-			//			}
-			//			System.out.println(count + " mines placed.");
-		}
-
-		// TILES POSITIONING
-		// After first click and mines positioning, update grid layout
-		for (int row = 0; row < numRows; row++) {
-			for (int col = 0; col < numCols; col++) {
-				int item = row * numCols + col;
-				System.out.print(tiles[row][col] + " ");
-				tile = (Tile) grid.getChildren().get(item);
-				tile.type = tiles[row][col];
-				tile.state = -1;
-			}
-			System.out.println();
-		}
-		System.out.println();
-		return tiles;
-	}
-
+	// Clear empty tiles around a clicked tile, search using recursion
 	static void clearEmpty(int row, int col) {
 		int rows = tiles.length;
 		int cols = tiles[0].length;
 		int item = row * cols + col;
 		Tile tile = (Tile) grid.getChildren().get(item);
-		if (tiles[row][col] < 9 && tile.state < 0) {
+		if (tiles[row][col] < 9 && tile.state.equals("covered")) {
 			//			System.out.println(tile.type + " ");
 			if(tile.type == 0) {
 				tile.setGraphic(null);
-				tile.state = 0;
+				tile.state = "cleared";
 				Play.setCleared(Play.getCleared() - 1);
 				if (Play.getCleared() < 1) {
-					Play.gameWin(grid);
+					Play.gameWin();
 				}
 			}
 			if (tile.type < 9 && tile.type > 0) {
 				tile.setGraphic(null);
 				tile.setText(Integer.toString(tile.type));
 				tile.setStyle("-fx-font-size: " + tileSize/2 + "px; -fx-text-fill: hsb(" + (int)120/(1.5*tile.type) + ", 100%, 100%); ");
-				tile.state = tile.type;
+				tile.state = "cleared";
 				Play.setCleared(Play.getCleared() - 1);
-				if (Play.getCleared() < 1) {
-					Play.gameWin(grid);
-				}
-			} else {
+			} else {	
 				if (col > 0) {
 					clearEmpty(row, col-1);
 				}
@@ -221,5 +100,8 @@ public class Grid extends GridPane {
 			}
 		}
 	}
-}
 
+	public static GridPane getGrid() {
+		return grid;
+	}
+}

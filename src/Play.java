@@ -20,24 +20,24 @@ import javafx.util.Duration;
 
 public class Play extends BorderPane {
 	private static String playerImg;
-	private static String difficulty;
 	private static boolean isSafe;
 	private static boolean isDead;
-	private static int mines;
 	private static int numCols;
 	private static int numRows;
 	private static int cleared;
 	private static int timer;
 	private static Timeline timeline;
 	private static BorderPane base;
-	private static Stage stage;
 	private static Music music;
+	private static Stage stage;
+	static int mines;
+	static String difficulty;
 
 	// First run constructor
 	public Play(Stage stage) {
 		// Start game with default difficulty
 		Play.stage = stage;
-		difficulty = "Beginner";
+		Play.difficulty = "Beginner";
 		newGame(difficulty);
 	}
 
@@ -49,7 +49,7 @@ public class Play extends BorderPane {
 		newGame(difficulty);
 	}
 
-	public static void newGame(String difficulty) {
+	public void newGame(String difficulty) {
 
 		music = new Music("newGame", difficulty);
 		music.start();
@@ -80,29 +80,31 @@ public class Play extends BorderPane {
 		}
 
 		// Define number of tiles that must be cleared to win the game
-		setCleared((numCols * numRows) - mines);
+		cleared = (numCols * numRows) - mines;
 
 		Canvas canvas = new Canvas(0,0);
 		canvas.autosize();
-
 		// Set BorderPane layout:
 		// Top pane scorebar, updated every second
 		// Center pane grid, contains the tiles
 		// Bottom pane menu, contains game option
 		base = new BorderPane(canvas);
-		getBase().setStyle("-fx-border-width: 10px; -fx-border-color: #444");
-		getBase().setTop(ScoreBar.scoreBar());
+		base.setStyle("-fx-border-width: 10px; -fx-border-color: #444; -fx-background-color: #444;");
+		base.setTop(ScoreBar.scoreBar());
 
 		timeline = new Timeline(new KeyFrame(Duration.seconds(1), e -> {
-			getBase().setTop(ScoreBar.scoreBar());
+			base.setTop(ScoreBar.scoreBar());
+			if (Play.getCleared() < 1) {
+				Play.gameWin();
+			}
 		}));
 		timeline.setCycleCount(Animation.INDEFINITE);
-		getBase().setCenter(Grid.gridPane(numRows, numCols, mines));
-		getBase().setBottom(MainMenu.menu());
+		base.setCenter(Grid.gridPane(numRows, numCols, mines));
+		base.setBottom(MainMenu.menu());
 		timeline.play();
 
 		// set scene and options
-		Scene scene = new Scene(getBase());
+		Scene scene = new Scene(base);
 		stage.getIcons().add(new Image("file:res/minepark.png"));
 		stage.setScene(scene);
 		stage.setTitle("Minepark");
@@ -111,25 +113,20 @@ public class Play extends BorderPane {
 		stage.show();
 	}
 
-	// Game ends by selecting a mine tile
-	public static void gameOver(int[][] tiles, Tile t, GridPane grid) {
-		setDead(true);
-		getBase().setTop(ScoreBar.scoreBar());
+	// Game ends by clicking on a mine tile
+	static void gameOver(Tile mine) {
+		isDead = true;
+		GridPane grid = Grid.getGrid();
+		base.setTop(ScoreBar.scoreBar());
 		for (int row = 0; row < numRows; row++) {
 			for (int col = 0; col < numCols; col++) {
-				int type = tiles[row][col];
-				if (row == t.row && col == t.col) continue;
-				if (type == 9) {
-					Tile tile = new Tile();
-					tile.setGraphic(tile.imageMine);
-					grid.add(tile,col,row);	
-				}
+				if (row == mine.row && col == mine.col) continue;
+				int item = row * numCols + col;
+				Tile tile = (Tile) grid.getChildren().get(item);
+				tile.clear();
 			}
 		}
-		for (Node tile: grid.getChildren()) { 
-			tile.setDisable(true);
-			tile.opacityProperty().set(90.0);
-		}
+		// Stop the timer
 		timeline.stop();
 		music.stop();
 		music = new Music("gameover", difficulty);
@@ -137,9 +134,10 @@ public class Play extends BorderPane {
 	}
 
 	// Game ends by clearing all safe tiles
-	public static void gameWin(GridPane grid) {
-		setSafe(true);
-		getBase().setTop(ScoreBar.scoreBar());
+	static void gameWin() {
+		GridPane grid = Grid.getGrid();
+		isSafe = true;
+		base.setTop(ScoreBar.scoreBar());
 		for (Node tile: grid.getChildren()) {
 			tile.setDisable(true);
 			tile.opacityProperty().set(90.0);;
@@ -150,7 +148,7 @@ public class Play extends BorderPane {
 		music.start();
 	}
 
-	public static void loadSplashScreen() {
+	void loadSplashScreen() {
 		//Load splash screen
 		String splashImg = ("file:res/splash.png");
 
@@ -178,17 +176,13 @@ public class Play extends BorderPane {
 		});
 	}
 
+	public Stage getStage() {
+		return stage;
+	}
+
 	// Getters and setters
 	public static String getPlayerImg() {
 		return playerImg;
-	}
-
-	public static String getDifficulty() {
-		return difficulty;
-	}
-
-	public static int getMines() {
-		return mines;
 	}
 
 	public static int getNumCols() {
@@ -221,22 +215,6 @@ public class Play extends BorderPane {
 
 	public static void setPlayerImg(String playerImg) {
 		Play.playerImg = playerImg;
-	}
-
-	public static void setDifficulty(String difficulty) {
-		Play.difficulty = difficulty;
-	}
-
-	public static void setMines(int mines) {
-		Play.mines = mines;
-	}
-
-	public static void setSafe(boolean isSafe) {
-		Play.isSafe = isSafe;
-	}
-
-	public static void setDead(boolean isDead) {
-		Play.isDead = isDead;
 	}
 
 	public static void setCleared(int cleared) {

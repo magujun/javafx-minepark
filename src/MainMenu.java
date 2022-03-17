@@ -11,13 +11,14 @@ public class MainMenu extends MenuBar {
 
 		MenuBar menuBar = new MenuBar();
 		menu = new Menu("Menu");
+		menuBar.setStyle("-fx-background-radius: 0 0 10 10;");
 		menuBar.getMenus().add(menu);
 
 		newGameItem = new MenuItem("New Game");
 		menu.getItems().add(newGameItem);
 		newGameItem.setOnAction( e -> {
 			Play.getTimeline().stop();
-			new Play(Play.getDifficulty());
+			new Play(Play.difficulty);
 		});
 
 		quitItem = new MenuItem("Quit");

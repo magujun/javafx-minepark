@@ -22,7 +22,8 @@ public class Minepark extends Application {
 
 	@Override
 	public void start(Stage primaryStage) {
-
+		
+		// Set title bar icon
 		try {
 			primaryStage.getIcons().add(new Image("file:res/minepark.png"));
 		} catch (MediaException e) {
