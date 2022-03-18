@@ -7,9 +7,10 @@ public class Tile extends Button {
 	int row, col;
 	String state;
 	boolean flagged;
-	ImageView imageTile, imageMine, imageFlag;
+	ImageView imageTile, imageMine, imageFlag, imageSure;
 	double tileSize = Grid.tileSize;
 
+	// Tile constructor
 	public Tile() {
 		this.state = "covered";
 
@@ -30,6 +31,10 @@ public class Tile extends Button {
 		imageFlag = new ImageView(new Image("file:res/tiles/flag.png"));
 		imageFlag.setFitHeight(tileSize);
 		imageFlag.setFitWidth(tileSize);
+
+		imageSure = new ImageView(new Image("file:res/tiles/sure.png"));
+		imageSure.setFitHeight(tileSize);
+		imageSure.setFitWidth(tileSize);
 
 		setGraphic(imageTile);
 	}
@@ -54,6 +59,7 @@ public class Tile extends Button {
 			this.state = "cleared";
 		}
 	}
+
 	public void flag() {
 		if (flagged == true) {
 			unflag();
@@ -67,7 +73,7 @@ public class Tile extends Button {
 	}
 
 	public void unflag() {
-		setGraphic(this.imageTile);
+		covered();
 		state = "covered";
 		flagged = false;
 		Play.mines += 1;
@@ -80,15 +86,23 @@ public class Tile extends Button {
 		Play.gameOver(this);
 	}
 
+	public void sure() {
+		setGraphic(this.imageSure);
+	}
+
+	public void covered() {
+		setGraphic(this.imageTile);
+	}
+
 	public void clear() {
 		if (type == 0) {
 			// Hit an empty tile
-			Grid.clearEmpty(this.row, this.col);
-		} else if (type == 9) {
+			setGraphic(null);
+		} else if (type == 9 && !state.equals("flagged")) {
 			setGraphic(this.imageMine);
 			// Hit a tile that is in contact with a mine
 			// Clear it and display the number of mines
-		} else { 
+		} else if (type < 9) { 
 			setGraphic(null);
 			setText(Integer.toString(type));
 			setStyle("-fx-font-size: " + tileSize/2 + "px; -fx-text-fill: hsb(" + (int)120/(1.5*this.type) + ", 100%, 100%); ");

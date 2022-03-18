@@ -19,23 +19,19 @@ import javafx.stage.Stage;
 import javafx.util.Duration;
 
 public class Play extends BorderPane {
+	private static int numCols, numRows, cleared, timer;
+	private static boolean isSafe, isDead;
 	private static String playerImg;
-	private static boolean isSafe;
-	private static boolean isDead;
-	private static int numCols;
-	private static int numRows;
-	private static int cleared;
-	private static int timer;
 	private static Timeline timeline;
 	private static BorderPane base;
 	private static Music music;
 	private static Stage stage;
-	static int mines;
 	static String difficulty;
+	static int mines;
 
 	// First run constructor
 	public Play(Stage stage) {
-		// Start game with default difficulty
+		// Start game with default "Beginner" difficulty
 		Play.stage = stage;
 		Play.difficulty = "Beginner";
 		newGame(difficulty);
@@ -43,17 +39,17 @@ public class Play extends BorderPane {
 
 	// New game constructor
 	public Play(String difficulty) {
-		// Start nem game with current or selected difficulty
+		// Start nem game with current or newly selected difficulty
 		Play.difficulty = difficulty;
 		music.stop();
 		newGame(difficulty);
 	}
 
+	// Start new game
 	public void newGame(String difficulty) {
 
 		music = new Music("newGame", difficulty);
 		music.start();
-		setTimer(0);
 		playerImg = "file:res/";
 		isSafe = false;
 		isDead = false;
@@ -71,7 +67,7 @@ public class Play extends BorderPane {
 			mines = 99;
 			playerImg += "mysterion.png";
 			break;
-		default:
+		default: // "Beginner"
 			numCols = 8;
 			numRows = 8;
 			mines = 10;
@@ -84,14 +80,17 @@ public class Play extends BorderPane {
 
 		Canvas canvas = new Canvas(0,0);
 		canvas.autosize();
-		// Set BorderPane layout:
-		// Top pane scorebar, updated every second
+
+		// SET BORDER PANE LAYOUT
+		// Top pane scorebar, contains flagged mines counter, game button and a timer
 		// Center pane grid, contains the tiles
-		// Bottom pane menu, contains game option
+		// Bottom pane menu, contains game options menu
 		base = new BorderPane(canvas);
 		base.setStyle("-fx-border-width: 10px; -fx-border-color: #444; -fx-background-color: #444;");
 		base.setTop(ScoreBar.scoreBar());
 
+		// Update the BorderPane top region with a new scoreBar, every second
+		// Check the number of cleared non mined tiles to process a game win
 		timeline = new Timeline(new KeyFrame(Duration.seconds(1), e -> {
 			base.setTop(ScoreBar.scoreBar());
 			if (Play.getCleared() < 1) {
@@ -99,11 +98,12 @@ public class Play extends BorderPane {
 			}
 		}));
 		timeline.setCycleCount(Animation.INDEFINITE);
+
 		base.setCenter(Grid.gridPane(numRows, numCols, mines));
 		base.setBottom(MainMenu.menu());
 		timeline.play();
 
-		// set scene and options
+		// SET SCENE AND OPTIONS
 		Scene scene = new Scene(base);
 		stage.getIcons().add(new Image("file:res/minepark.png"));
 		stage.setScene(scene);
@@ -113,7 +113,7 @@ public class Play extends BorderPane {
 		stage.show();
 	}
 
-	// Game ends by clicking on a mine tile
+	// End game for clicking on a mine tile
 	static void gameOver(Tile mine) {
 		isDead = true;
 		GridPane grid = Grid.getGrid();
@@ -126,14 +126,14 @@ public class Play extends BorderPane {
 				tile.clear();
 			}
 		}
-		// Stop the timer
+		// Stop the timer and load new music
 		timeline.stop();
 		music.stop();
 		music = new Music("gameover", difficulty);
 		music.start();
 	}
 
-	// Game ends by clearing all safe tiles
+	// Process game win for clearing all safe tiles
 	static void gameWin() {
 		GridPane grid = Grid.getGrid();
 		isSafe = true;
@@ -148,39 +148,19 @@ public class Play extends BorderPane {
 		music.start();
 	}
 
-	void loadSplashScreen() {
-		//Load splash screen
-		String splashImg = ("file:res/splash.png");
-
-		ImageView splash = new ImageView(new Image(splashImg));
-		StackPane pane = new StackPane(splash);
-		base.getChildren().setAll(pane);
-
-		//Load splash screen with fade in effect
-		FadeTransition fadeIn = new FadeTransition(Duration.seconds(3), pane);
-		fadeIn.setFromValue(0);
-		fadeIn.setToValue(1);
-		fadeIn.setCycleCount(1);
-
-		//Finish splash with fade out effect
-		FadeTransition fadeOut = new FadeTransition(Duration.seconds(3), pane);
-		fadeOut.setFromValue(1);
-		fadeOut.setToValue(0);
-		fadeOut.setCycleCount(1);
-
-		fadeIn.play();
-
-		//After fade in, start fade out
-		fadeIn.setOnFinished((e) -> {
-			fadeOut.play();
-		});
-	}
-
+	// Getters and setters
 	public Stage getStage() {
 		return stage;
 	}
 
-	// Getters and setters
+	public static BorderPane getBase() {
+		return base;
+	}
+
+	public static Timeline getTimeline() {
+		return timeline;
+	}
+
 	public static String getPlayerImg() {
 		return playerImg;
 	}
@@ -193,24 +173,16 @@ public class Play extends BorderPane {
 		return numRows;
 	}
 
+	public static int getCleared() {
+		return cleared;
+	}
+
 	public static boolean isSafe() {
 		return isSafe;
 	}
 
 	public static boolean isDead() {
 		return isDead;
-	}
-
-	public static int getCleared() {
-		return cleared;
-	}
-
-	public static int getTimer() {
-		return timer;
-	}
-
-	public static void setTimer(int timer) {
-		Play.timer = timer;
 	}
 
 	public static void setPlayerImg(String playerImg) {
@@ -221,12 +193,48 @@ public class Play extends BorderPane {
 		Play.cleared = cleared;
 	}
 
-	public static Timeline getTimeline() {
-		return timeline;
+	/**
+	 * @return the timer
+	 */
+	public static int getTimer() {
+		return timer;
 	}
 
-	public static BorderPane getBase() {
-		return base;
+	/**
+	 * @param timer the timer to set
+	 */
+	public static void setTimer(int timer) {
+		Play.timer = timer;
+	}
+
+	// Splash screen (todo, maybe)
+	void loadSplashScreen() {
+
+		//Load splash screen
+		String splashImg = ("file:res/splash.png");
+
+		ImageView splash = new ImageView(new Image(splashImg));
+		StackPane pane = new StackPane(splash);
+		base.getChildren().setAll(pane);
+
+		// Set fade in effect
+		FadeTransition fadeIn = new FadeTransition(Duration.seconds(3), pane);
+		fadeIn.setFromValue(0);
+		fadeIn.setToValue(1);
+		fadeIn.setCycleCount(1);
+
+		// Set fade out effect
+		FadeTransition fadeOut = new FadeTransition(Duration.seconds(3), pane);
+		fadeOut.setFromValue(1);
+		fadeOut.setToValue(0);
+		fadeOut.setCycleCount(1);
+
+		fadeIn.play();
+
+		//After fade in, start fade out
+		fadeIn.setOnFinished((e) -> {
+			fadeOut.play();
+		});
 	}
 }
 

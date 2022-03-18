@@ -21,7 +21,12 @@ public class Grid extends GridPane {
 				tile.type = 0;
 				tile.row = row;
 				tile.col = col;
-
+				tile.setOnMousePressed(e -> {
+					MouseButton mouseButton = e.getButton();
+					if (mouseButton == MouseButton.PRIMARY)
+						if (mines > 0 && !tile.state.equals("cleared")) tile.sure();
+				});
+				tile.setOnMouseReleased(e -> tile.covered());
 				// Set new properties for the tiles, according to the clicked tile.
 				tile.setOnMouseClicked(e -> {
 					MouseButton mouseButton = e.getButton();
@@ -31,6 +36,7 @@ public class Grid extends GridPane {
 					// The tile state has to be "covered"
 					if (mouseButton == MouseButton.SECONDARY) {
 						if (mines > 0 && !tile.state.equals("cleared")) tile.flag();
+						if (tile.state.equals("cleared")) clearEmpty(tile.row, tile.col);
 					} else if (clicks[0] == 0 && !tile.state.equals("flagged")) {
 						// If it's the first click on the grid, position the mines to set the grid layout.
 						// First click is always on an empty tile
@@ -57,13 +63,10 @@ public class Grid extends GridPane {
 		Tile tile = (Tile) grid.getChildren().get(item);
 		if (tiles[row][col] < 9 && tile.state.equals("covered")) {
 			//			System.out.println(tile.type + " ");
-			if(tile.type == 0) {
+			if (tile.type == 0) {
 				tile.setGraphic(null);
 				tile.state = "cleared";
 				Play.setCleared(Play.getCleared() - 1);
-				if (Play.getCleared() < 1) {
-					Play.gameWin();
-				}
 			}
 			if (tile.type < 9 && tile.type > 0) {
 				tile.setGraphic(null);
@@ -101,6 +104,7 @@ public class Grid extends GridPane {
 		}
 	}
 
+	// Getters and Setters
 	public static GridPane getGrid() {
 		return grid;
 	}
