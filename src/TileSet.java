@@ -77,7 +77,6 @@ public class TileSet {
 				System.out.print(tiles[row][col] + " ");
 				tile = (Tile) grid.getChildren().get(item);
 				tile.type = tiles[row][col];
-				tile.state = "covered";
 			}
 			System.out.println();
 		}

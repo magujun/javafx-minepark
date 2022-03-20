@@ -27,6 +27,7 @@ public class Play extends BorderPane {
 	private static Music music;
 	private static Stage stage;
 	static String difficulty;
+	static Tile mine;
 	static int mines;
 
 	// First run constructor
@@ -96,6 +97,9 @@ public class Play extends BorderPane {
 			if (Play.getCleared() < 1) {
 				Play.gameWin();
 			}
+			if (isDead == true) {
+				Play.gameOver(mine);
+			}
 		}));
 		timeline.setCycleCount(Animation.INDEFINITE);
 
@@ -123,7 +127,9 @@ public class Play extends BorderPane {
 				if (row == mine.row && col == mine.col) continue;
 				int item = row * numCols + col;
 				Tile tile = (Tile) grid.getChildren().get(item);
-				tile.clear();
+				if (tile.covered) tile.clear();
+				tile.setDisable(true);
+				tile.opacityProperty().set(90.0);
 			}
 		}
 		// Stop the timer and load new music
@@ -135,12 +141,12 @@ public class Play extends BorderPane {
 
 	// Process game win for clearing all safe tiles
 	static void gameWin() {
-		GridPane grid = Grid.getGrid();
 		isSafe = true;
+		GridPane grid = Grid.getGrid();
 		base.setTop(ScoreBar.scoreBar());
 		for (Node tile: grid.getChildren()) {
 			tile.setDisable(true);
-			tile.opacityProperty().set(90.0);;
+			tile.opacityProperty().set(90.0);
 		}
 		timeline.stop();
 		music.stop();
@@ -183,6 +189,14 @@ public class Play extends BorderPane {
 
 	public static boolean isDead() {
 		return isDead;
+	}
+
+	public static void setSafe(boolean safe) {
+		isSafe = safe;
+	}
+
+	public static void setDead(boolean dead) {
+		isDead = dead;
 	}
 
 	public static void setPlayerImg(String playerImg) {

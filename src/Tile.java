@@ -1,18 +1,20 @@
 import javafx.scene.control.Button;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.layout.GridPane;
 
 public class Tile extends Button {
 	int type; // type is a number meaning (0 to 8) for points of contact with mines and (9) for mines
 	int row, col;
-	String state;
-	boolean flagged;
+	boolean covered, flagged, checked; // !covered is cleared, flagged needs no explanation
 	ImageView imageTile, imageMine, imageFlag, imageSure;
 	double tileSize = Grid.tileSize;
+	int[][] tiles = Grid.getTiles();
+	int rows = tiles.length;
+	int cols = tiles[0].length;
 
 	// Tile constructor
 	public Tile() {
-		this.state = "covered";
 
 		setMinWidth(tileSize);
 		setMinHeight(tileSize);
@@ -36,78 +38,208 @@ public class Tile extends Button {
 		imageSure.setFitHeight(tileSize);
 		imageSure.setFitWidth(tileSize);
 
+		type = 0;
+		flagged = false;
+		covered = true;
 		setGraphic(imageTile);
+
 	}
 
 	public void click() {
-		// Handle primary click, if is safe or has flag, do nothing
-		if (state.equals("covered")) {
+
+		// Handle primary click, if is cleared or has flag, do nothing
+		if (covered && !flagged) {
+
+			// Hit a mine
 			if (type == 9) {
-				// Hit a mine
 				mine();
-			} else if (this.type == 0) {
-				// Hit an empty tile
-				Grid.clearEmpty(this.row, this.col);
-			} else {
-				// Hit a tile that is in contact with a mine
-				// Clear it and display the number of mines
+			}
+
+			// Hit an empty tile, clear surrounding empty tiles
+			else if (type == 0) {
+				clearAroundEmpty(row, col);
+			}
+
+			// Hit a tile that is in contact with a mine
+			// Clear it and display the number of surrounding mines
+			else {
 				setGraphic(null);
 				setText(Integer.toString(type));
-				setStyle("-fx-font-size: " + tileSize/2 + "px; -fx-text-fill: hsb(" + (int)120/(1.5*this.type) + ", 100%, 100%); ");
+				setStyle("-fx-font-size: " + tileSize/2 + "px; -fx-text-fill: hsb(" + (int)120/(1.5*type) + ", 100%, 100%);");
 				Play.setCleared(Play.getCleared() - 1);
-			}						
-			this.state = "cleared";
+			}	
+			covered = false;
+		}
+	}
+
+	public void check() {
+		if (!covered && type > 0) {
+			checked = true;
+			System.out.println("Clearing surrounding tiles");
+			clearSurrounding(row, col);
+		}
+	}
+
+	public void tease() {
+		if (covered && !flagged) {
+			setGraphic(imageSure);
+			setOnMouseReleased(e -> {
+				if (covered && !flagged) setGraphic(imageTile);
+			});
 		}
 	}
 
 	public void flag() {
 		if (flagged == true) {
 			unflag();
-		} else {
-			setGraphic(this.imageFlag);
+		} 
+
+		else if (covered) {
+			setGraphic(imageFlag);
 			flagged = true;
-			state = "flagged";
 			Play.mines -= 1;
 			Play.getBase().setTop(ScoreBar.scoreBar());
 		}
 	}
 
 	public void unflag() {
-		covered();
-		state = "covered";
 		flagged = false;
+		setGraphic(imageTile);
 		Play.mines += 1;
 		Play.getBase().setTop(ScoreBar.scoreBar());
 	}
 
 	public void mine() {
-		setGraphic(this.imageMine);
+		setGraphic(imageMine);
 		setStyle("-fx-background-color: 'RED'; ");
+		Play.setDead(true);
 		Play.gameOver(this);
 	}
 
-	public void sure() {
-		setGraphic(this.imageSure);
-	}
-
-	public void covered() {
-		setGraphic(this.imageTile);
-	}
-
 	public void clear() {
+		// Clear an empty tile
+		// Update the number of cleared tiles
 		if (type == 0) {
-			// Hit an empty tile
 			setGraphic(null);
-		} else if (type == 9 && !state.equals("flagged")) {
-			setGraphic(this.imageMine);
-			// Hit a tile that is in contact with a mine
-			// Clear it and display the number of mines
-		} else if (type < 9) { 
+			Play.setCleared(Play.getCleared() - 1);
+			covered = false;
+		} 
+
+		// Clear a tile with an unflagged mine
+		// Sets mine field to point to this tile and isDead 
+		// Timeline handles gameOver(mine)
+		else if (type == 9 && !flagged) {
+			setGraphic(imageMine);
+			Play.setDead(true);
+			Play.mine = this;
+		} 
+
+		// Clear a tile that is in contact with a mine
+		// Update the number of cleared tiles
+		else if (type > 0 && type < 9) { 
 			setGraphic(null);
 			setText(Integer.toString(type));
-			setStyle("-fx-font-size: " + tileSize/2 + "px; -fx-text-fill: hsb(" + (int)120/(1.5*this.type) + ", 100%, 100%); ");
-		}	
-		setDisable(true);
-		opacityProperty().set(90.0);
+			setStyle("-fx-font-size: " + tileSize/2 + "px; -fx-text-fill: hsb(" + (int)120/(1.5*type) + ", 100%, 100%);");
+			Play.setCleared(Play.getCleared() - 1);
+			covered = false;
+		}
+	}
+
+	// Clear tiles around an empty clicked tile, using recursive search
+	public void clearAroundEmpty(int row, int col) {
+		int element = row * cols + col;
+		GridPane grid = Grid.getGrid();
+		Tile tile = (Tile) grid.getChildren().get(element);
+		if (tile.covered) {
+			if (tile.type == 0) tile.clear();
+			if (tile.type > 0) tile.clear();
+			else {
+				System.out.println("Recursion on tile: " + element + ": type " + tile.type + ", covered: " + covered + " flagged: " + flagged);
+				searchAround(row, col);
+			}
+		}
+	}	
+
+	// Clear tiles around a cleared, non empty tile, using recursive search
+	public void clearSurrounding(int row, int col) {
+		int element = row * cols + col;
+		GridPane grid = Grid.getGrid();
+		Tile tile = (Tile) grid.getChildren().get(element);
+		if (tile.covered || !tile.checked) {
+			tile.checked = true;
+			tile.clear();
+		}
+		else {
+			System.out.println("Recursion on tile: " + element + ": type " + tile.type + ", covered: " + covered + " flagged: " + flagged);
+			searchSurrounding(row, col);
+		}
+	}
+
+
+	// Recursively search for surrounding mines
+	// Take into account grid array limits
+	public void searchAround(int row, int col) {
+		// Search left
+		if (col > 0) {
+			clearAroundEmpty(row, col-1);
+		}
+		// Search right
+		if (col < cols-1) {
+			clearAroundEmpty(row, col+1);
+		}
+		// Search up 
+		if (row > 0) {
+			clearAroundEmpty(row-1, col);
+			if (col > 0) {
+				clearAroundEmpty(row-1, col-1);
+			}
+			if (col < cols-1) {
+				clearAroundEmpty(row-1, col+1);
+			}
+		}
+		// Search down
+		if (row < rows-1) {
+			clearAroundEmpty(row+1, col);
+			if (col > 0) {
+				clearAroundEmpty(row+1, col-1);
+			}
+			if (col < cols-1) {
+				clearAroundEmpty(row+1, col+1);
+			}
+
+		}
+	}
+	// Recursively search for surrounding mines
+	// Take into account grid array limits
+	public void searchSurrounding(int row, int col) {
+		// Search left
+		if (col > 0) {
+			clearSurrounding(row, col-1);
+		}
+		// Search right
+		if (col < cols-1) {
+			clearSurrounding(row, col+1);
+		}
+		// Search up 
+		if (row > 0) {
+			clearSurrounding(row-1, col);
+			if (col > 0) {
+				clearSurrounding(row-1, col-1);
+			}
+			if (col < cols-1) {
+				clearSurrounding(row-1, col+1);
+			}
+		}
+		// Search down
+		if (row < rows-1) {
+			clearSurrounding(row+1, col);
+			if (col > 0) {
+				clearSurrounding(row+1, col-1);
+			}
+			if (col < cols-1) {
+				clearSurrounding(row+1, col+1);
+			}
+
+		}
 	}
 }
