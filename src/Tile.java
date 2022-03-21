@@ -12,6 +12,7 @@ public class Tile extends Button {
 	int[][] tiles = Grid.getTiles();
 	int rows = tiles.length;
 	int cols = tiles[0].length;
+	GridPane grid = Grid.getGrid();
 
 	// Tile constructor
 	public Tile() {
@@ -69,14 +70,13 @@ public class Tile extends Button {
 				Play.setCleared(Play.getCleared() - 1);
 			}	
 			covered = false;
+			checked = true;
 		}
 	}
 
 	public void check() {
-		if (!covered && type > 0) {
-			checked = true;
-			System.out.println("Clearing surrounding tiles");
-			clearSurrounding(row, col);
+		if (!covered) {
+			searchSurrounding();
 		}
 	}
 
@@ -122,7 +122,6 @@ public class Tile extends Button {
 		if (type == 0) {
 			setGraphic(null);
 			Play.setCleared(Play.getCleared() - 1);
-			covered = false;
 		} 
 
 		// Clear a tile with an unflagged mine
@@ -141,37 +140,29 @@ public class Tile extends Button {
 			setText(Integer.toString(type));
 			setStyle("-fx-font-size: " + tileSize/2 + "px; -fx-text-fill: hsb(" + (int)120/(1.5*type) + ", 100%, 100%);");
 			Play.setCleared(Play.getCleared() - 1);
-			covered = false;
 		}
+		covered = false;
+		checked = true;
 	}
 
 	// Clear tiles around an empty clicked tile, using recursive search
 	public void clearAroundEmpty(int row, int col) {
 		int element = row * cols + col;
-		GridPane grid = Grid.getGrid();
 		Tile tile = (Tile) grid.getChildren().get(element);
 		if (tile.covered) {
 			if (tile.type == 0) tile.clear();
 			if (tile.type > 0) tile.clear();
-			else {
-				System.out.println("Recursion on tile: " + element + ": type " + tile.type + ", covered: " + covered + " flagged: " + flagged);
-				searchAround(row, col);
-			}
+			else searchAround(row, col);
 		}
 	}	
 
 	// Clear tiles around a cleared, non empty tile, using recursive search
-	public void clearSurrounding(int row, int col) {
-		int element = row * cols + col;
-		GridPane grid = Grid.getGrid();
-		Tile tile = (Tile) grid.getChildren().get(element);
-		if (tile.covered || !tile.checked) {
-			tile.checked = true;
-			tile.clear();
-		}
-		else {
-			System.out.println("Recursion on tile: " + element + ": type " + tile.type + ", covered: " + covered + " flagged: " + flagged);
-			searchSurrounding(row, col);
+	// Only searches aroung the clicked tile coordinates (row, col)
+	public void clearSurrounding(int r, int c) {
+		int element = r * cols + c;
+		Tile checking = (Tile) grid.getChildren().get(element);
+		if(!checking.checked) {
+			checking.clear();
 		}
 	}
 
@@ -211,7 +202,7 @@ public class Tile extends Button {
 	}
 	// Recursively search for surrounding mines
 	// Take into account grid array limits
-	public void searchSurrounding(int row, int col) {
+	public void searchSurrounding() {
 		// Search left
 		if (col > 0) {
 			clearSurrounding(row, col-1);
