@@ -11,6 +11,7 @@
 import javafx.application.Application;
 import javafx.scene.image.Image;
 import javafx.scene.media.MediaException;
+import javafx.scene.text.Font;
 import javafx.stage.Stage;
 
 public class Minepark extends Application {
@@ -22,10 +23,11 @@ public class Minepark extends Application {
 
 	@Override
 	public void start(Stage primaryStage) {
-		
+
 		// Set title bar icon
 		try {
 			primaryStage.getIcons().add(new Image("file:res/minepark.png"));
+			Font.loadFont("file:res/fonts/digital-7.ttf", 0);
 		} catch (MediaException e) {
 			System.out.println("Missing media files!");
 		}

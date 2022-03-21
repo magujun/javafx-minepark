@@ -50,7 +50,6 @@ public class ScoreBar extends ToolBar {
 		for (int i = 1; i < 4; i++) {
 			int minesDigit = (int)(i == 1 ? Math.floor(mines/100): i == 2 ? Math.floor(mines/10) : mines%10);
 			Text counter = new Text(Integer.toString(minesDigit));
-			counter.setStyle("@font-face: {-font-family: 'Digital-7 Mono'; src(url(“res/fonts/digital-7.ttf”))};");
 			counter.setStyle("-fx-font-family: 'Digital-7 Mono'; -fx-font-size: 60px;");
 			counter.setEffect(ds);
 			counter.setCache(true);
@@ -78,7 +77,6 @@ public class ScoreBar extends ToolBar {
 		for (int i = 1; i < 4; i++) {
 			int timeDigit = (int)(i == 1 ? Math.floor(timer/100%100) : i == 2 ? Math.floor(timer/10%10) : timer%10);
 			Text timer = new Text(Integer.toString(timeDigit));
-			timer.setStyle("@font-face: {-font-family: 'Digital-7 Mono'; src(url(“res/fonts/digital-7.ttf”))};");
 			timer.setStyle("-fx-font-family: 'Digital-7 Mono'; -fx-font-color: 'RED'; -fx-font-size: 60px;");
 			timer.setEffect(ds);
 			timer.setCache(true);
