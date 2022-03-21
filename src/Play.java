@@ -49,6 +49,7 @@ public class Play extends BorderPane {
 	// Start new game
 	public void newGame(String difficulty) {
 
+		timer = 0;
 		music = new Music("newGame", difficulty);
 		music.start();
 		playerImg = "file:res/";
