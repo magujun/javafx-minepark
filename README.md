@@ -40,22 +40,23 @@ These instructions will take you to a copy of the project running on your local 
     - mkdir bin/
 ```    
 
-**Note:** You will need to download the javaFX libs to run the application.
+**NOTE:** You will need to download the javaFX libs to run the application.
 
 The following commands are an example for a GNU/Linux x86_64 environment.
-
 ```    
     - curl -L https://download2.gluonhq.com/openjfx/18/openjfx-18_linux-x64_bin-sdk.zip > tmp/openjfx-18_linux-x64_bin-sdk.zip
     - unzip tmp/openjfx-18_linux-x64_bin-sdk.zip -d tmp/
  ```
  *For other platforms, please check [openJFX.io](https://gluonhq.com/products/javafx/) and download the openjfx SDK for your system.*
  
- **Compile**
+ **COMPILE**
  ```   
     - javac -d bin --module-path tmp/javafx-sdk-18/lib --add-modules=javafx.controls,javafx.media,javafx.graphics -classpath bin:tmp/javafx-sdk-18/lib/javafx-swt.jar:tmp/javafx-sdk-18/lib/javafx.base.jar:tmp/javafx-sdk-18/lib/javafx.controls.jar:tmp/javafx-sdk-18/lib/javafx.graphics.jar:tmp/javafx-sdk-18/lib/javafx.media.jar:tmp/javafx-sdk-18/lib/javafx.swing.jar:tmp/javafx-sdk-18/lib/javafx.web.jar src/*
 ```
-**Run**
-```- java --module-path tmp/javafx-sdk-18/lib --add-modules=javafx.controls,javafx.media,javafx.graphics -classpath bin:tmp/javafx-sdk-18/lib/javafx-swt.jar:tmp/javafx-sdk-18/lib/javafx.base.jar:tmp/javafx-sdk-18/lib/javafx.controls.jar:tmp/javafx-sdk-18/lib/javafx.graphics.jar:tmp/javafx-sdk-18/lib/javafx.media.jar:tmp/javafx-sdk-18/lib/javafx.swing.jar:tmp/javafx-sdk-18/lib/javafx.web.jar Minepark
+
+**RUN**
+```
+- java --module-path tmp/javafx-sdk-18/lib --add-modules=javafx.controls,javafx.media,javafx.graphics -classpath bin:tmp/javafx-sdk-18/lib/javafx-swt.jar:tmp/javafx-sdk-18/lib/javafx.base.jar:tmp/javafx-sdk-18/lib/javafx.controls.jar:tmp/javafx-sdk-18/lib/javafx.graphics.jar:tmp/javafx-sdk-18/lib/javafx.media.jar:tmp/javafx-sdk-18/lib/javafx.swing.jar:tmp/javafx-sdk-18/lib/javafx.web.jar Minepark
 ```
 
 ## 🎓 Who taught?
