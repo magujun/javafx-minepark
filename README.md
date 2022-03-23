@@ -41,7 +41,7 @@ These instructions will take you to a copy of the project running on your local 
 
 ## 🎓 Who taught?
 
-All the Java and JavaFX classes that led me to develop this project were taught by **[Sarah Foss](https://github.com/sarahfoss)** at Okanagan College's Computer Information Systems **COSC-121** Course .
+All the Java and JavaFX classes that led me to develop this project were taught by **[Sarah Foss](https://github.com/sarahfoss)** as part of Okanagan College's Computer Information Systems **COSC-121** Course.
 
 ## 🤔 Contribute
 
