@@ -5,10 +5,11 @@ language: java
 before_install:
   - sudo apt-get install unzip
   - mkdir tmp/
+  - mkdir bin/
   - curl -L https://download2.gluonhq.com/openjfx/18/openjfx-18_linux-x64_bin-sdk.zip > tmp/openjfx-18_linux-x64_bin-sdk.zip
   - cd tmp
   - unzip openjfx-18_linux-x64_bin-sdk.zip
 
 script:
-  - javac --module-path tmp/javafx-sdk-17.0.2/lib --add-modules=javafx.controls,javafx.media,javafx.graphics -Dfile.encoding=UTF-8 -classpath bin:tmp/javafx-sdk-17.0.2/lib/javafx-swt.jar:tmp/javafx-sdk-17.0.2/lib/javafx.base.jar:tmp/javafx-sdk-17.0.2/lib/javafx.controls.jar:tmp/javafx-sdk-17.0.2/lib/javafx.graphics.jar:tmp/javafx-sdk-17.0.2/lib/javafx.media.jar:tmp/javafx-sdk-17.0.2/lib/javafx.swing.jar:tmp/javafx-sdk-17.0.2/lib/javafx.web.jar -XX:+ShowCodeDetailsInExceptionMessages src/Minepark.java
+  - javac -d bin --module-path tmp/javafx-sdk-17.0.2/lib --add-modules=javafx.controls,javafx.media,javafx.graphics -Dfile.encoding=UTF-8 -classpath bin:tmp/javafx-sdk-17.0.2/lib/javafx-swt.jar:tmp/javafx-sdk-17.0.2/lib/javafx.base.jar:tmp/javafx-sdk-17.0.2/lib/javafx.controls.jar:tmp/javafx-sdk-17.0.2/lib/javafx.graphics.jar:tmp/javafx-sdk-17.0.2/lib/javafx.media.jar:tmp/javafx-sdk-17.0.2/lib/javafx.swing.jar:tmp/javafx-sdk-17.0.2/lib/javafx.web.jar -XX:+ShowCodeDetailsInExceptionMessages src/Minepark.java
   - java --module-path tmp/javafx-sdk-17.0.2/lib --add-modules=javafx.controls,javafx.media,javafx.graphics -Dfile.encoding=UTF-8 -classpath bin:tmp/javafx-sdk-17.0.2/lib/javafx-swt.jar:tmp/javafx-sdk-17.0.2/lib/javafx.base.jar:tmp/javafx-sdk-17.0.2/lib/javafx.controls.jar:tmp/javafx-sdk-17.0.2/lib/javafx.graphics.jar:tmp/javafx-sdk-17.0.2/lib/javafx.media.jar:tmp/javafx-sdk-17.0.2/lib/javafx.swing.jar:tmp/javafx-sdk-17.0.2/lib/javafx.web.jar -XX:+ShowCodeDetailsInExceptionMessages Minepark
