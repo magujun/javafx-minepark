@@ -6,7 +6,6 @@
      <img width="75px" src="https://user-images.githubusercontent.com/75567460/159811876-e8556b1d-fb47-4b57-a884-4d5294c21f29.png">
     <img width="250px" src="https://user-images.githubusercontent.com/75567460/159811559-b59300f5-4aba-4d1d-b44d-c26b04501986.png">
         <img width="75px" src="https://user-images.githubusercontent.com/75567460/159811641-962e9d84-8160-4969-9328-6d50788359a8.png">
-
     <br><br>
     <p align="center">
       <a href="#-technology">Technology</a>&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;
