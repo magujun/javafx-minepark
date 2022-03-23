@@ -41,7 +41,8 @@ These instructions will take you to a copy of the project running on your local 
 ```    
 
 **Note:** You will need to download the javaFX libs to run the application.
-The following commands apply to a Linux x86_64 environment.
+
+The following commands are an example for a GNU/Linux x86_64 environment.
 
 ```    
     - curl -L https://download2.gluonhq.com/openjfx/18/openjfx-18_linux-x64_bin-sdk.zip > tmp/openjfx-18_linux-x64_bin-sdk.zip
