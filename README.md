@@ -39,7 +39,7 @@ These instructions will take you to a copy of the project running on your local 
 
 ## 🎓 Who taught?
 
-All the classes were taught by **[Sarah Foss](https://github.com/sarahfoss)** at Okanagan Colleger Computer Information Systems **COSC121 Course** .
+All the classes were taught by **[Sarah Foss](https://github.com/sarahfoss)** at Okanagan College's Computer Information Systems **COSC-121** Course .
 
 ## 🤔 Contribute
 
