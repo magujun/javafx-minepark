@@ -22,8 +22,8 @@ A <strong>JavaFX</strong> implementation of Minesweeper with a **[South Park™]
 
 This project has been developed and tested with the following technologies:
 
-- [Java](https://www.java.com/en/) :: Java™ Language
-- [JavaFX](https://openjfx.io/) :: OpenJFX client application platform runtime SDK 
+- [Java](https://www.java.com/en/) :: Oracle Java™ Language | OpenJDK JRE 61.0
+- [JavaFX](https://openjfx.io/) :: JavaFX Framework | OpenJFX SDK 17.0.2
 - [...Work in progress]()
 
 ## ⤵ Setup
@@ -33,7 +33,7 @@ These instructions will take you to a copy of the project running on your local 
 **Note:** 
 
 ```bash
-- git clone https://github.com/magujun/javafx-minpark.git
+- git clone https://github.com/magujun/javafx-minepark.git
 - cd javafx-minepark
 ```
 
