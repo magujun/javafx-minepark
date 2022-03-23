@@ -3,7 +3,7 @@
 # javafx-minepark
 
 <h3 align="center">
-    <img width="250px" src="https://user-images.githubusercontent.com/75567460/159610466-edf808ad-e8c2-4582-85ba-47ef508ef7f4.png">
+    <img width="250px" src="https://user-images.githubusercontent.com/75567460/159811559-b59300f5-4aba-4d1d-b44d-c26b04501986.png">
     <br><br>
     <p align="center">
       <a href="#-technology">Technology</a>&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;
