@@ -26,7 +26,7 @@ This project has been developed and tested with the following technologies:
 
 - [Java](https://www.java.com/en/) :: Oracle Java™ Language | OpenJDK JRE
 - [JavaFX](https://openjfx.io/) :: JavaFX Framework | OpenJFX SDK
-- [...Work in progress]()
+- [...Work in progress](https://github.com/magujun/javafx-minepark)
 
 ## ⤵ Setup
 
