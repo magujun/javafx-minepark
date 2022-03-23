@@ -16,7 +16,7 @@
 [![GitHub forks](https://img.shields.io/github/forks/magujun/javafx-minepark?style=social)](https://github.com/magujun/javafx-minepark/network/members/)
 [![GitHub stars](https://img.shields.io/github/stars/magujun/javafx-minepark?style=social)](https://github.com/magujun/javafx-minepark/stargazers/)
 
-A <strong>JavaFX</strong> implementation of Minesweeper with a **[South Park™](https://www.southparkstudios.com/)** theme.
+A <strong>JavaFX</strong> implementation of the classic Minesweeper game with a **[South Park™](https://www.southparkstudios.com/)** theme.
 
 ## 🚀 Technology
 
