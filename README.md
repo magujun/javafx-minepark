@@ -4,10 +4,10 @@
     <img width="250px" src="">
     <br><br>
     <p align="center">
-      <a href="#-technology">Technology</a> 
-      <a href="#-setup">Setup</a> 
-      <a href="#-contribute">Contribute</a> 
-      <a href="#-license">License</a> 
+      <a href="#-technology">Technology</a>&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;
+      <a href="#-setup">Setup</a>&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;
+      <a href="#-contribute">Contribute</a>&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;
+      <a href="#-license">License</a>
   </p>
 </h3>
 
