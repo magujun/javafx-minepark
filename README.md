@@ -1,7 +1,7 @@
 # javafx-minepark
 
 <h3 align="center">
-    <img width="250px" src="https://user-images.githubusercontent.com/75567460/159609179-3e35d796-065a-436c-877b-d698dce1d736.png">
+    <img width="250px" src="https://user-images.githubusercontent.com/75567460/159610466-edf808ad-e8c2-4582-85ba-47ef508ef7f4.png">
     <br><br>
     <p align="center">
       <a href="#-technology">Technology</a>&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;
