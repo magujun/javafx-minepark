@@ -1,3 +1,5 @@
+[![Build Status](https://travis-ci.com/magujun/javafx-minepark.svg?token=USgh2z8AUN8zmM2ir9LF&branch=main)](https://travis-ci.com/magujun/javafx-minepark)
+
 # javafx-minepark
 
 <h3 align="center">
