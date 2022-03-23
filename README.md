@@ -1,13 +1,13 @@
 # javafx-minepark
 
 <h3 align="center">
-    <img width="250px" src="https://user-images.githubusercontent.com/75567460/115541174-1c1b8f00-a29f-11eb-8100-64c8c5bfb74c.png">
+    <img width="250px" src="">
     <br><br>
     <p align="center">
-      <a href="#-technology">Technology</a>
-      <a href="#-setup">Setup</a>
-      <a href="#-contribute">Contribute</a>
-      <a href="#-license">License</a>
+      <a href="#-technology">Technology</a> 
+      <a href="#-setup">Setup</a> 
+      <a href="#-contribute">Contribute</a> 
+      <a href="#-license">License</a> 
   </p>
 </h3>
 
