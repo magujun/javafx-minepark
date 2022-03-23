@@ -1,4 +1,4 @@
-[![Build Status](https://travis-ci.com/magujun/javafx-minepark.svg?token=USgh2z8AUN8zmM2ir9LF&branch=main)](https://travis-ci.com/magujun/javafx-minepark)
+[![Build Status](https://app.travis-ci.com/magujun/javafx-minepark.svg?branch=main)](https://app.travis-ci.com/magujun/javafx-minepark)
 
 # javafx-minepark
 
