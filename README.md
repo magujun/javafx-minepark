@@ -39,7 +39,7 @@ These instructions will take you to a copy of the project running on your local 
 
 **NOTE:** You will need to download the javaFX libs to run the application.
 
-The following commands are an example for a GNU/Linux x86_64 environment.
+The following commands are an example for a GNU/Linux x86_64 environment (Debian-based).
 ```    
     - sudo apt-get install unzip
     - mkdir tmp/
