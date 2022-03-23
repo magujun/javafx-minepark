@@ -56,7 +56,7 @@ The following commands are an example for a GNU/Linux x86_64 environment.
 
 **RUN**
 ```
-- java --module-path tmp/javafx-sdk-18/lib --add-modules=javafx.controls,javafx.media,javafx.graphics -classpath bin:tmp/javafx-sdk-18/lib/javafx-swt.jar:tmp/javafx-sdk-18/lib/javafx.base.jar:tmp/javafx-sdk-18/lib/javafx.controls.jar:tmp/javafx-sdk-18/lib/javafx.graphics.jar:tmp/javafx-sdk-18/lib/javafx.media.jar:tmp/javafx-sdk-18/lib/javafx.swing.jar:tmp/javafx-sdk-18/lib/javafx.web.jar Minepark
+    - java --module-path tmp/javafx-sdk-18/lib --add-modules=javafx.controls,javafx.media,javafx.graphics -classpath bin:tmp/javafx-sdk-18/lib/javafx-swt.jar:tmp/javafx-sdk-18/lib/javafx.base.jar:tmp/javafx-sdk-18/lib/javafx.controls.jar:tmp/javafx-sdk-18/lib/javafx.graphics.jar:tmp/javafx-sdk-18/lib/javafx.media.jar:tmp/javafx-sdk-18/lib/javafx.swing.jar:tmp/javafx-sdk-18/lib/javafx.web.jar Minepark
 ```
 
 ## 🎓 Who taught?
