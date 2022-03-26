@@ -23,7 +23,7 @@ import javafx.util.Duration;
 public class HighScores {
 	private static final String HIGHSCORES = "res/highscores_";
 	private static int finalscore, highscores, leaderscore;
-	private static String difficulty = Play.difficulty;
+	private static String difficulty;
 	private static boolean isEmpty;
 	private static String name;
 	private static ArrayList<String> leaders = new ArrayList<>();
@@ -31,14 +31,13 @@ public class HighScores {
 	private static VBox messageBox = new VBox();
 	private static Scanner input;
 	private static FadeTransition fadeIn, fadeOut;
-	private static File file = new File(HIGHSCORES + difficulty + ".txt");
+	private static File file;
 
 	public static void highscore() {
 
 		BorderPane pane = new BorderPane();
 		pane.setMinSize(250,250);
 		pane.setMaxSize(250,250);
-		pane.getChildren().removeAll();
 		messageBox.setSpacing(10);
 		messageBox.setAlignment(Pos.CENTER);
 
@@ -78,6 +77,7 @@ public class HighScores {
 	public static void score() {
 
 		finalscore = Play.getTimer();
+		difficulty = Play.difficulty;
 
 		try {
 
@@ -85,6 +85,7 @@ public class HighScores {
 			// One file for each difficulty level
 			isEmpty = false;
 
+			file = new File(HIGHSCORES + difficulty + ".txt");
 			if (!file.exists()) {
 				file.createNewFile();
 				isEmpty = true;
@@ -135,6 +136,7 @@ public class HighScores {
 				result.setTextAlignment(TextAlignment.CENTER);
 				result.setText("\n\n");
 
+				messageBox.getChildren().clear();
 				messageBox.getChildren().addAll(message, nameField, button, result);
 
 				// Create a new window (stage)
@@ -147,6 +149,7 @@ public class HighScores {
 						name = nameField.getText();
 						result.setText(name + ", your time was " + (finalscore - 1) + " seconds.\n"
 								+ "Now you are on the Hall of Heroes!");
+						button.setDisable(true);
 
 						fadeOut.play();
 
@@ -172,6 +175,8 @@ public class HighScores {
 
 		try {
 
+			difficulty = Play.difficulty;
+
 			// Check for number of highscores
 			// Remove last place, if needed
 			// Add new highscore to the leaderboard array
@@ -181,7 +186,7 @@ public class HighScores {
 			}
 			else {
 				for (String s: leaders) {
-					leaderscore = Integer.parseInt(s.substring(s.indexOf(":") + 2, s.length()));
+					leaderscore = Integer.parseInt(s.substring(s.indexOf(":") + 1, s.length()));
 					if (finalscore < leaderscore || i == highscores - 1) {
 						leaders.add(i, name + ": " + finalscore);
 						break;
@@ -197,7 +202,7 @@ public class HighScores {
 			// Write record to the highscores file
 			PrintWriter output = new PrintWriter(file);
 			String text = "Hall of Heroes\n";
-			text += "-" + difficulty.toUpperCase() + "S -\n\n";
+			text += "-" + difficulty.toUpperCase() + "-\n\n";
 			for (String s: leaders) {
 				text += s + "\n";
 				output.println(s);
@@ -227,7 +232,13 @@ public class HighScores {
 		try {
 
 			difficulty = Play.difficulty;
-			// Check for highscores			
+
+			// Check file for highscores			
+			file = new File(HIGHSCORES + difficulty + ".txt");
+			if (!file.exists()) {
+				file.createNewFile();
+				isEmpty = true;
+			}
 			input = new Scanner(file);
 			leaders.clear();
 			String line, leadername;
@@ -244,6 +255,7 @@ public class HighScores {
 				isEmpty = true;
 			}
 			input.close();
+
 			// Display leaderboard
 			String text = "Hall of Heroes\n";
 			text += "-" + difficulty.toUpperCase() + "-\n\n";
@@ -255,23 +267,25 @@ public class HighScores {
 				for (String s: leaders) {
 					text += s + "\n";
 				}
-				Text message = new Text(text);
-				message.setTextAlignment(TextAlignment.CENTER);
-				messageBox.getChildren().clear();
-				messageBox.getChildren().add(message);
+			}
+			Text message = new Text(text);
+			message.setTextAlignment(TextAlignment.CENTER);
+			messageBox.getChildren().clear();
+			messageBox.getChildren().add(message);
 
-				highscore();
-				fadeOut.setDelay(Duration.seconds(5));
-				fadeOut.play();
+			highscore();
+			fadeOut.setDelay(Duration.seconds(5));
+			fadeOut.play();
 
-				// After leaderboard fade out, close window
-				fadeOut.setOnFinished((e) -> {
-					stage.close();
-				});
+			// After leaderboard fade out, close window
+			fadeOut.setOnFinished((e) -> {
+				stage.close();
+			});
 
-			} 
 		} catch (FileNotFoundException e) {
-			System.out.println("\nFile " + HIGHSCORES + " not found!");
+			System.out.println("\nFile " + HIGHSCORES + difficulty + " not found!");
+		} catch (IOException e) {
+			System.out.println("Input/output error!");
 		}
 	}
 
