@@ -24,8 +24,7 @@ public class MainMenu extends MenuBar {
 		scoresItem = new MenuItem("High Scores");
 		menu.getItems().add(scoresItem);
 		scoresItem.setOnAction( e -> {
-			Play.getTimeline().stop();
-			new HighScores();
+			HighScores.leaderboard();
 		});
 
 		quitItem = new MenuItem("Quit");

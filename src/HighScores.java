@@ -22,21 +22,23 @@ import javafx.util.Duration;
 
 public class HighScores {
 	private static final String HIGHSCORES = "res/highscores_";
+	private static int finalscore, highscores, leaderscore;
+	private static String difficulty = Play.difficulty;
+	private static boolean isEmpty;
+	private static String name;
 	private static ArrayList<String> leaders = new ArrayList<>();
 	private static Stage stage = new Stage();
-	private static BorderPane pane = new BorderPane();
 	private static VBox messageBox = new VBox();
-	private static int finalscore, highscores, leaderscore;
-	private static boolean isEmpty;
 	private static Scanner input;
-	private static File file;
-	private static String difficulty, name;
 	private static FadeTransition fadeIn, fadeOut;
+	private static File file = new File(HIGHSCORES + difficulty + ".txt");
 
 	public static void highscore() {
 
+		BorderPane pane = new BorderPane();
 		pane.setMinSize(250,250);
 		pane.setMaxSize(250,250);
+		pane.getChildren().removeAll();
 		messageBox.setSpacing(10);
 		messageBox.setAlignment(Pos.CENTER);
 
@@ -61,6 +63,7 @@ public class HighScores {
 
 		// SET SCENE AND OPTIONS
 		Scene scene = new Scene(pane);
+		stage = new Stage();
 		stage.initStyle(StageStyle.UNDECORATED);
 		stage.getIcons().add(new Image("file:res/minepark.png"));
 		stage.setScene(scene);
@@ -75,13 +78,11 @@ public class HighScores {
 	public static void score() {
 
 		finalscore = Play.getTimer();
-		difficulty = Play.difficulty;
 
 		try {
 
-			// Load hogh score records from local file
+			// Load high score records from local file
 			// One file for each difficulty level
-			file = new File(HIGHSCORES + difficulty + ".txt");
 			isEmpty = false;
 
 			if (!file.exists()) {
@@ -151,7 +152,7 @@ public class HighScores {
 
 						// After message fade out, process record
 						fadeOut.setOnFinished(e1 -> {
-							leaderboard();
+							highscores();
 						});
 
 					} else {
@@ -167,7 +168,7 @@ public class HighScores {
 		}
 	}
 
-	public static void leaderboard() {
+	public static void highscores() {
 
 		try {
 
@@ -220,4 +221,58 @@ public class HighScores {
 			System.out.println("\nFile " + HIGHSCORES + " not found!");
 		}
 	}
+
+	public static void leaderboard() {
+
+		try {
+
+			difficulty = Play.difficulty;
+			// Check for highscores			
+			input = new Scanner(file);
+			leaders.clear();
+			String line, leadername;
+			int leaderscore;
+			if (input.hasNextLine()) {
+				do {
+					line = input.nextLine();
+					leadername = line.substring(0, line.indexOf(":"));
+					leaderscore = Integer.parseInt(line.substring(line.indexOf(":") + 2, line.length()));
+					leaders.add(leadername + ": " + leaderscore);
+				} while (input.hasNextLine());
+			} 
+			else {
+				isEmpty = true;
+			}
+			input.close();
+			// Display leaderboard
+			String text = "Hall of Heroes\n";
+			text += "-" + difficulty.toUpperCase() + "-\n\n";
+
+			if (isEmpty) {
+				text += "NO HIGH SCORES\n";
+			}
+			else {
+				for (String s: leaders) {
+					text += s + "\n";
+				}
+				Text message = new Text(text);
+				message.setTextAlignment(TextAlignment.CENTER);
+				messageBox.getChildren().clear();
+				messageBox.getChildren().add(message);
+
+				highscore();
+				fadeOut.setDelay(Duration.seconds(5));
+				fadeOut.play();
+
+				// After leaderboard fade out, close window
+				fadeOut.setOnFinished((e) -> {
+					stage.close();
+				});
+
+			} 
+		} catch (FileNotFoundException e) {
+			System.out.println("\nFile " + HIGHSCORES + " not found!");
+		}
+	}
+
 }
