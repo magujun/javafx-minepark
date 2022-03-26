@@ -7,7 +7,7 @@ public class Tile extends Button {
 	int type; // type is a number meaning (0 to 8) for points of contact with mines and (9) for mines
 	int row, col;
 	boolean covered, flagged, checked; // !covered is cleared, flagged needs no explanation
-	ImageView imageTile, imageMine, imageFlag, imageSure;
+	ImageView imageTile, imageMine, imageFlag, imageMisflag, imageSure;
 	double tileSize = Grid.tileSize;
 	int[][] tiles = Grid.getTiles();
 	int rows = tiles.length;
@@ -34,6 +34,10 @@ public class Tile extends Button {
 		imageFlag = new ImageView(new Image("file:res/tiles/flag.png"));
 		imageFlag.setFitHeight(tileSize);
 		imageFlag.setFitWidth(tileSize);
+
+		imageMisflag = new ImageView(new Image("file:res/tiles/misflag.png"));
+		imageMisflag.setFitHeight(tileSize);
+		imageMisflag.setFitWidth(tileSize);
 
 		imageSure = new ImageView(new Image("file:res/tiles/sure.png"));
 		imageSure.setFitHeight(tileSize);
@@ -132,6 +136,13 @@ public class Tile extends Button {
 			Play.setDead(true);
 			Play.mine = this;
 		} 
+
+		// Clear a tile with an unflagged mine
+		// Sets mine field to point to this tile and isDead 
+		// Timeline handles gameOver(mine)
+		else if (type != 9 && flagged) {
+			setGraphic(imageMisflag);
+		}
 
 		// Clear a tile that is in contact with a mine
 		// Update the number of cleared tiles
