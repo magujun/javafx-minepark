@@ -82,7 +82,7 @@ public class HighScores {
 			// Load hogh score records from local file
 			// One file for each difficulty level
 			file = new File(HIGHSCORES + difficulty + ".txt");
-			boolean isEmpty = false;
+			isEmpty = false;
 
 			if (!file.exists()) {
 				file.createNewFile();
@@ -177,12 +177,9 @@ public class HighScores {
 			int i = 0;
 			if (isEmpty) {
 				leaders.add(name + ": " + finalscore);
-				System.out.println(name);
-				System.out.println(finalscore);
 			}
 			else {
 				for (String s: leaders) {
-					System.out.println(s);
 					leaderscore = Integer.parseInt(s.substring(s.indexOf(":") + 2, s.length()));
 					if (finalscore < leaderscore || i == highscores - 1) {
 						leaders.add(i, name + ": " + finalscore);
@@ -191,22 +188,19 @@ public class HighScores {
 					i++;
 				}
 			}
-			
+
 			highscores = leaders.size();
 			if (highscores > 5) leaders.remove(highscores - 1);
 
 			// Display leaderboard
 			// Write record to the highscores file
 			PrintWriter output = new PrintWriter(file);
-			
 			String text = "Hall of Heroes\n";
-			text += difficulty.toUpperCase() + "S\n\n";
+			text += "-" + difficulty.toUpperCase() + "S -\n\n";
 			for (String s: leaders) {
-				System.out.println(s);
-				text += s;
+				text += s + "\n";
 				output.println(s);
 			}
-			System.out.println(text);
 			Text message = new Text(text);
 			message.setTextAlignment(TextAlignment.CENTER);
 			messageBox.getChildren().clear();
