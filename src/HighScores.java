@@ -186,7 +186,7 @@ public class HighScores {
 			}
 			else {
 				for (String s: leaders) {
-					leaderscore = Integer.parseInt(s.substring(s.indexOf(":") + 1, s.length()));
+					leaderscore = Integer.parseInt(s.substring(s.indexOf(":") + 2, s.length()));
 					if (finalscore < leaderscore || i == highscores - 1) {
 						leaders.add(i, name + ": " + finalscore);
 						break;
