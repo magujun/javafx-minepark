@@ -6,7 +6,7 @@ public class MainMenu extends MenuBar {
 
 	public static MenuBar menu() {
 
-		MenuItem newGameItem, difficultyItem, quitItem;
+		MenuItem newGameItem, scoresItem, quitItem, difficultyItem ;
 		Menu menu, difficultyMenu;
 
 		MenuBar menuBar = new MenuBar();
@@ -19,6 +19,13 @@ public class MainMenu extends MenuBar {
 		newGameItem.setOnAction( e -> {
 			Play.getTimeline().stop();
 			new Play(Play.difficulty);
+		});
+
+		scoresItem = new MenuItem("High Scores");
+		menu.getItems().add(scoresItem);
+		scoresItem.setOnAction( e -> {
+			Play.getTimeline().stop();
+			new HighScores();
 		});
 
 		quitItem = new MenuItem("Quit");

@@ -20,13 +20,11 @@ public class ScoreBar extends ToolBar {
 		mines = Play.mines;
 
 		ToolBar scoreBar = new ToolBar();
-//		scoreBar.setStyle("-fx-background-color: hsb(0,0%,85%);");
-		scoreBar.setStyle("-fx-background-color: linear-gradient(to bottom, #ff7f50, #6a5acd);");
 		scoreBar.setStyle("-fx-background-radius: 10 10 0 0;");
 		DropShadow ds = new DropShadow();
-		ds.setOffsetY(5.0f);
-		ds.setOffsetX(5.0f);
-		ds.setColor(Color.color(0.4f, 0.4f, 0.4f));
+		ds.setOffsetY(3.0f);
+		ds.setOffsetX(3.0f);
+		ds.setColor(Color.color(0.3f, 0.3f, 0.3f));
 		ds.setRadius(5.0f);
 		Pane leftSpacer = new Pane();
 		HBox.setHgrow(
@@ -50,7 +48,7 @@ public class ScoreBar extends ToolBar {
 		for (int i = 1; i < 4; i++) {
 			int minesDigit = (int)(i == 1 ? Math.floor(mines/100): i == 2 ? Math.floor(mines/10) : mines%10);
 			Text counter = new Text(Integer.toString(minesDigit));
-			counter.setStyle("-fx-font-family: 'Digital-7 Mono'; -fx-font-size: 60px;");
+			counter.setStyle("-fx-font-family: 'Digital-7 Mono';  -fx-fill:#222; -fx-font-size: 60px;");
 			counter.setEffect(ds);
 			counter.setCache(true);
 			scoreBar.getItems().add(counter);
@@ -77,7 +75,7 @@ public class ScoreBar extends ToolBar {
 		for (int i = 1; i < 4; i++) {
 			int timeDigit = (int)(i == 1 ? Math.floor(timer/100%100) : i == 2 ? Math.floor(timer/10%10) : timer%10);
 			Text timer = new Text(Integer.toString(timeDigit));
-			timer.setStyle("-fx-font-family: 'Digital-7 Mono'; -fx-font-color: 'RED'; -fx-font-size: 60px;");
+			timer.setStyle("-fx-font-family: 'Digital-7 Mono'; -fx-fill:#222; -fx-font-size: 60px;");
 			timer.setEffect(ds);
 			timer.setCache(true);
 			scoreBar.getItems().add(timer);

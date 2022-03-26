@@ -94,7 +94,7 @@ public class Tile extends Button {
 			unflag();
 		} 
 
-		else if (covered) {
+		else if (Play.mines > 0 && covered) {
 			setGraphic(imageFlag);
 			flagged = true;
 			Play.mines -= 1;

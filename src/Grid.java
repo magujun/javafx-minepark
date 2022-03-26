@@ -55,7 +55,7 @@ public class Grid extends GridPane {
 					// Also Check for flagged mines around a cleared tile
 					// If all surrounding mines are correctly flagged, clear surrounding tiles
 					else if (mouseButton == MouseButton.SECONDARY) {
-						if (mines > 0) tile.flag();
+						tile.flag();
 						tile.check();
 					}
 

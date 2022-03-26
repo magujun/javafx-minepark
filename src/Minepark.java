@@ -24,14 +24,13 @@ public class Minepark extends Application {
 	@Override
 	public void start(Stage primaryStage) {
 
-		// Set title bar icon
+		// Set title bar icon & load external font
 		try {
 			primaryStage.getIcons().add(new Image("file:res/minepark.png"));
 			Font.loadFont("file:res/fonts/digital-7.ttf", 0);
 		} catch (MediaException e) {
 			System.out.println("Missing media files!");
 		}
-
 		// Start game
 		new Play(primaryStage);
 	}

@@ -11,11 +11,11 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
-import javafx.scene.layout.StackPane;
 import javafx.scene.media.Media;
 import javafx.scene.media.MediaException;
 import javafx.scene.media.MediaPlayer;
 import javafx.stage.Stage;
+import javafx.stage.StageStyle;
 import javafx.util.Duration;
 
 public class Play extends BorderPane {
@@ -35,7 +35,7 @@ public class Play extends BorderPane {
 		// Start game with default "Beginner" difficulty
 		Play.stage = stage;
 		Play.difficulty = "Beginner";
-		newGame(difficulty);
+		loadSplashScreen();
 	}
 
 	// New game constructor
@@ -90,6 +90,8 @@ public class Play extends BorderPane {
 		base = new BorderPane(canvas);
 		base.setStyle("-fx-border-width: 10px; -fx-border-color: #444; -fx-background-color: #444;");
 		base.setTop(ScoreBar.scoreBar());
+		base.setCenter(Grid.gridPane(numRows, numCols, mines));
+		base.setBottom(MainMenu.menu());
 
 		// Update the BorderPane top region with a new scoreBar, every second
 		// Check the number of cleared non mined tiles to process a game win
@@ -103,9 +105,6 @@ public class Play extends BorderPane {
 			}
 		}));
 		timeline.setCycleCount(Animation.INDEFINITE);
-
-		base.setCenter(Grid.gridPane(numRows, numCols, mines));
-		base.setBottom(MainMenu.menu());
 		timeline.play();
 
 		// SET SCENE AND OPTIONS
@@ -149,6 +148,7 @@ public class Play extends BorderPane {
 			tile.setDisable(true);
 			tile.opacityProperty().set(90.0);
 		}
+		HighScores.score();
 		timeline.stop();
 		music.stop();
 		music = new Music("win", difficulty);
@@ -208,49 +208,65 @@ public class Play extends BorderPane {
 		Play.cleared = cleared;
 	}
 
-	/**
-	 * @return the timer
-	 */
 	public static int getTimer() {
 		return timer;
 	}
 
-	/**
-	 * @param timer the timer to set
-	 */
 	public static void setTimer(int timer) {
 		Play.timer = timer;
 	}
 
-	// Splash screen (todo, maybe)
+	// Splash screen =)
 	void loadSplashScreen() {
 
-		//Load splash screen
+		Stage stage = new Stage();
+		stage.initStyle(StageStyle.UNDECORATED);
+		base = new BorderPane();
+		base.setStyle("-fx-background-color: #BBB;");
+		base.setMinSize(720,345);
 		String splashImg = ("file:res/splash.png");
-
 		ImageView splash = new ImageView(new Image(splashImg));
-		StackPane pane = new StackPane(splash);
-		base.getChildren().setAll(pane);
+		splash.minHeight(base.getHeight());
+		splash.minWidth(base.getWidth());
+		splash.maxHeight(base.getHeight());
+		splash.maxWidth(base.getWidth());
+		base.getChildren().setAll(splash);
+
+		// SET SCENE AND OPTIONS
+		Scene scene = new Scene(base);
+		stage.getIcons().add(new Image("file:res/minepark.png"));
+		stage.setScene(scene);
+		stage.setTitle("Minepark");
+		stage.setResizable(false);
+		stage.centerOnScreen();
+		stage.show();
 
 		// Set fade in effect
-		FadeTransition fadeIn = new FadeTransition(Duration.seconds(3), pane);
+		FadeTransition fadeIn = new FadeTransition(Duration.seconds(0.5), base);
 		fadeIn.setFromValue(0);
 		fadeIn.setToValue(1);
 		fadeIn.setCycleCount(1);
+		fadeIn.play();
 
 		// Set fade out effect
-		FadeTransition fadeOut = new FadeTransition(Duration.seconds(3), pane);
+		FadeTransition fadeOut = new FadeTransition(Duration.seconds(0.5), base);
 		fadeOut.setFromValue(1);
 		fadeOut.setToValue(0);
 		fadeOut.setCycleCount(1);
-
-		fadeIn.play();
+		fadeOut.setDelay(Duration.seconds(1));
 
 		//After fade in, start fade out
 		fadeIn.setOnFinished((e) -> {
 			fadeOut.play();
 		});
+
+		//After fade out, start game
+		fadeOut.setOnFinished((e) -> {
+			stage.close();
+			newGame(difficulty);
+		});
 	}
+
 }
 
 class Music {
